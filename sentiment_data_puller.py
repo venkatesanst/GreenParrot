@@ -7,6 +7,10 @@ import pandas as pd
 app = Flask(__name__)
 api = Api(app)
 
+@app.route('/', methods=['GET'])
+def index():
+    return 'Hello World!', 200
+
 @app.route('/api/v1/get_sentiment_daa', methods=['GET'])
 def get_sentiment_daa():
     if request.method == 'GET':
@@ -32,10 +36,13 @@ def update_sentiment_daa():
 def bulk_insert_sentiment_daa():
     if request.method == 'POST':
         try:
-            # Get dataframe json from request body, convert to dataframe and insert into sqlite
+            # Get dataframe json from request body, convert to dataframe and insert into sqlite database
             data = request.get_json()
             df = pd.read_json(data)
             insert_into_sqlite(df, os.environ.get('Fundamental_News_Table'))
             return {'message': 'success'}, 200
         except Exception as e:
             return {'error': str(e)}, 500
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0')
