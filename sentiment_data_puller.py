@@ -33,8 +33,8 @@ def bulk_insert_sentiment_daa():
     if request.method == 'POST':
         try:
             # Get dataframe json from request body, convert to dataframe and insert into sqlite DB
-            data = request.get_json()
-            df = pd.read_json(data)
+            input_data = request.get_json()
+            df = pd.read_json(input_data, orient='records')
             insert_into_sqlite(df, os.environ.get('Fundamental_News_Table'))
             return {'message': 'success'}, 200
         except Exception as e:
