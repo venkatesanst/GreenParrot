@@ -18,6 +18,7 @@ def get_sentiment_daa():
             sql_query = f"SELECT * FROM {os.environ.get('FUNDAMENTAL_NEWS_TABLE')}"
             print(sql_query)
             df = influx_connector.read_from_influx(sql_query)
+            df = df[["time", "symbol", "Entities", "Gpe", "Locations", "Organizations", "Others", "Sentiment", "title"]]
             return df.to_json(orient='records'), 200
         except Exception as e:
             return {'error': str(e)}, 500
